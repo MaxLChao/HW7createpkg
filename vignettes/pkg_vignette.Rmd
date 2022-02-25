@@ -7,9 +7,10 @@ output: html_document
 
 ## Creating Function `Reading_in`
 
-1. Copy and pasted the function into my funcs.R file.
-2. devtools::load_all()
-3. devtools::document()
+1. Copy and pasted the function into my funcs.R file and added export.
+2. Added more functionality with if statement and added arg + check for it.
+3. devtools::load_all()
+4. devtools::document()
 
 ## Getting fastqc data
 Data was grabbed from a fastqc data via these commands
@@ -19,9 +20,10 @@ Max@Maxs-MacBook-Pro extdata % scp -P22 mac4017@aphrodite.med.cornell.edu:/athen
 
 Running it through our vignette:
 ```{r Running reading_in}
-fastqc_output = system.file("extdata", "WT_rep1_ERR458493_fastqc_data.txt", package = "HW7_create_package")
-in_dat = reading_in(fastqc_output)
-in_dat
+library(HW7createpkg)
+fastqc_output = system.file("extdata", "WT_rep1_ERR458493_fastqc_data.txt", package = "HW7createpkg")
+in_dat = HW7createpkg::reading_in(fastqc_output)
+head(in_dat)
 ```
 
 ## Explaining the sed command
@@ -30,7 +32,7 @@ The command reads in the file being passed, from there it sed's the file to grab
 
 ## After Package Update and addition of new fastqc outputs
 ```{r The New And Improved Reading_in}
-fastqc_dir = system.file("extdata", package = "HW7_create_package")
+fastqc_dir = system.file("extdata", package = "HW7createpkg")
 fastqs = list.files(fastqc_dir,full.names = TRUE)
 names_fastqs = get_names(file_names = fastqs)
 df_fastqs = lapply(1:length(fastqs), function(x){
@@ -41,12 +43,61 @@ df_fastqs = lapply(1:length(fastqs), function(x){
 
 ## Saving rda
 ```{r saving the rda, eval=FALSE}
-rda_dir = system.file("data", package = "HW7_create_package")
+rda_dir = system.file("data", package = "HW7createpkg")
 save(df_fastqs, file = paste0(rda_dir,"/df_fastqs.rda"))
 ```
 Eval is false as this will exist in the package already...
 
 ## Building the Package
-Here we build the package. So we need to Compile...
+Here we build the package. So we need to Compile and build...
+Luckily we have this inbuilt with RStudio. So we just click the Install and Restart button and the magic happens. But really what is being done here are these commands:
+```{bash building the package, eval=FALSE}
+==> R CMD INSTALL --no-multiarch --with-keep.source HW7createpkg
+```
+In terms of why this should be false: to even get here your package needs to be built and compiled.
 
+## GGPlots
+Make a ggplot2-based plot using the combined data frame. Try to mimick the basic features of the example plot below, but feel free to change the color palette, remove the grey background and other details. (2pts)
+This should be part of the vignette, too.
+- You will probably have to add a couple of columns to your original combined data frame
+- You will get a bonus point if you (i) install the package (instead of loading it via devtools) and (ii) use the data stored in the package to make the plot
+```{r GGplot data prep}
+load(system.file("data/df_fastqs.rda", package = "HW7createpkg"))
+Info_fastqs = lapply(1:dim(df_fastqs)[1], function(x){
+  vals=strsplit(df_fastqs$sample_name[x], split = "_") %>%.[[1]]
+  c(paste0(vals[[1]],"_", vals[[2]]), vals[[3]])
+  }) %>% do.call(cbind.data.frame, .) %>% t()
+df_fastqs$biorep = as.factor(Info_fastqs[,1])
+df_fastqs$ERR = as.factor(Info_fastqs[,2])
+names(df_fastqs)[names(df_fastqs) == "#Base"] <- "Base"
+#split by biorep
+biorep1 = df_fastqs[which(df_fastqs$biorep == unique(df_fastqs$biorep)[[1]]),]
+biorep2 = df_fastqs[which(df_fastqs$biorep == unique(df_fastqs$biorep)[[2]]),]
+```
+Split the terms into two, subsetted them based on WTrep and generated factors for biorep and ERR.
 
+now to plot:
+```{r plotting up the storm}
+library(ggplot2)
+p <- ggplot(biorep1, aes(x=Base, y=Mean, fill=ERR)) +
+  geom_point(aes(shape=ERR, color=ERR)) + theme(legend.position="bottom")
+g <- ggplot(biorep1, aes(x=Base, y=Mean, fill=ERR)) +
+  geom_point(aes(shape=ERR, color=ERR)) + 
+  scale_color_manual(values = c("ERR458493" = "purple",
+                                "ERR458494"="steelblue"))  +
+  theme(legend.position="bottom",
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.y=element_blank())
+```
+The plot:
+```{r the plot, fig.show='hide'}
+library(gridExtra)
+library(ggpubr)
+plot_f = grid.arrange(p, g, ncol = 2) 
+```
+```{r the final plot}
+        annotate_figure(plot_f, 
+                        top = text_grob("WT_rep1 vs WT_rep2 Mean Base Quality for 2 Tech Reps", 
+                        color = "Black", face = "bold", size = 18))
+```

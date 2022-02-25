@@ -6,6 +6,9 @@
 # usethis::use_pipe(export = TRUE)
 #usethis::use_package("magrittr")
 # usethis::use_package("stringr")
+# usethis::use_package("ggplot2")
+# usethis::use_package("gridExtra")
+# usethis::use_package("ggpubr")
 
 rm(list = ls())
 # # Ctrl + Shift + F10
