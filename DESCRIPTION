@@ -1,0 +1,16 @@
+Package: HW7createpkg
+Title: Create A Package for ANGSD
+Version: 0.0.0.9000
+Authors@R: 
+    person("Max", "Chao", , "mac4017@med.cornell.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Following instructions for this class, create an R package.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Imports: 
+    data.table,
+    magrittr,
+    stringr

@@ -1,0 +1,52 @@
+---
+title: "Test Vignette"
+author: "Max Chao"
+date: "2/24/2022"
+output: html_document
+---
+
+## Creating Function `Reading_in`
+
+1. Copy and pasted the function into my funcs.R file.
+2. devtools::load_all()
+3. devtools::document()
+
+## Getting fastqc data
+Data was grabbed from a fastqc data via these commands
+```{bash, eval = FALSE}
+Max@Maxs-MacBook-Pro extdata % scp -P22 mac4017@aphrodite.med.cornell.edu:/athena/angsd/scratch/mac4017/Gierlinski_RNAseq/fastqc_out/WT_rep1_ERR458493_fastqc .
+```
+
+Running it through our vignette:
+```{r Running reading_in}
+fastqc_output = system.file("extdata", "WT_rep1_ERR458493_fastqc_data.txt", package = "HW7_create_package")
+in_dat = reading_in(fastqc_output)
+in_dat
+```
+
+## Explaining the sed command
+The command reads in the file being passed, from there it sed's the file to grab between the test (default) value `Per base sequence quality` and `END_MODULE`.
+
+
+## After Package Update and addition of new fastqc outputs
+```{r The New And Improved Reading_in}
+fastqc_dir = system.file("extdata", package = "HW7_create_package")
+fastqs = list.files(fastqc_dir,full.names = TRUE)
+names_fastqs = get_names(file_names = fastqs)
+df_fastqs = lapply(1:length(fastqs), function(x){
+  reading_in(file = fastqs[x], sample_name = names_fastqs[x])
+}) %>% do.call(rbind, .)
+
+```
+
+## Saving rda
+```{r saving the rda, eval=FALSE}
+rda_dir = system.file("data", package = "HW7_create_package")
+save(df_fastqs, file = paste0(rda_dir,"/df_fastqs.rda"))
+```
+Eval is false as this will exist in the package already...
+
+## Building the Package
+Here we build the package. So we need to Compile...
+
+
