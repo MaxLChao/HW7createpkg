@@ -14,3 +14,4 @@ rm(list = ls())
 # # Ctrl + Shift + F10
 devtools::load_all()
 devtools::document()
+devtools::build_vignettes()

@@ -95,15 +95,15 @@ g <- ggplot(biorep1, aes(x=Base, y=Mean, fill=ERR)) +
         axis.title.y=element_blank())
 ```
 The plot:
-```{r the plot, fig.show='hide', eval=FALSE}
+```{r the plot, eval=FALSE}
 library(gridExtra)
 library(ggpubr)
 plot_f = grid.arrange(p, g, ncol = 2) 
 out =   annotate_figure(plot_f, 
                         top = text_grob("WT_rep1 vs WT_rep2 Mean Base Quality for 2 Tech Reps", 
                         color = "Black", face = "bold", size = 18))
-vig=system.file("vignettes",package = "HW7createpkg")
-ggsave(plot_f, filename = paste0(vig,"/wtrep1vswtrep2.png"), device = "png")
+vig="." #system.file("vignettes",package = "HW7createpkg")
+ggsave(out, filename = paste0(vig,"/wtrep1vswtrep2.png"), device = "png")
 ```
 finally plotting:
 ```{r the final plot}
