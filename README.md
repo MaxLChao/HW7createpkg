@@ -5,5 +5,5 @@ To Download:
 if (!require("devtools")) {
   install.packages("devtools")
 }
-devtools::install_github("MaxLChao/create_pkg_ANGSD")
+devtools::install_github("MaxLChao/HW7createpkg")
 ```
