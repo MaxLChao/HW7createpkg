@@ -1,8 +1,12 @@
 ---
-title: "Test Vignette"
+title: "pkg_vignette.Rmd"
 author: "Max Chao"
 date: "2/24/2022"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pkg_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ## Creating Function `Reading_in`
@@ -96,6 +100,7 @@ library(gridExtra)
 library(ggpubr)
 plot_f = grid.arrange(p, g, ncol = 2) 
 ```
+finally plotting:
 ```{r the final plot}
         annotate_figure(plot_f, 
                         top = text_grob("WT_rep1 vs WT_rep2 Mean Base Quality for 2 Tech Reps", 

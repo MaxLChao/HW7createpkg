@@ -17,3 +17,7 @@ Imports:
     gridExtra,
     magrittr,
     stringr
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
