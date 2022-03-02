@@ -85,7 +85,7 @@ now to plot:
 library(ggplot2)
 p <- ggplot(biorep1, aes(x=Base, y=Mean, fill=ERR)) +
   geom_point(aes(shape=ERR, color=ERR)) + theme(legend.position="bottom")
-g <- ggplot(biorep1, aes(x=Base, y=Mean, fill=ERR)) +
+g <- ggplot(biorep2, aes(x=Base, y=Mean, fill=ERR)) +
   geom_point(aes(shape=ERR, color=ERR)) + 
   scale_color_manual(values = c("ERR458493" = "purple",
                                 "ERR458494"="steelblue"))  +
